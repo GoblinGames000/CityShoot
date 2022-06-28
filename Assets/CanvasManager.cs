@@ -56,6 +56,10 @@ public class CanvasManager : MonoBehaviour
         set
         {
             _playerHealth = value;
+            if (Session.Instance._GameType!=GameType.Mission) return;
+            
+                
+            
             if (_playerHealth <= 0&& Session.Instance._GameType!=GameType.Endless)
             {
                 CanvasManager.Instance._GameState = GameState.Over;

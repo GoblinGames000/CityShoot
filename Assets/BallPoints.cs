@@ -48,7 +48,7 @@ public class BallPoints : MonoBehaviour
         {
             ball_health -= 1;
             gameObject.transform.localScale = new Vector3(gameObject.transform.localScale.x - 0.1f, gameObject.transform.localScale.y -0.1f, gameObject.transform.localScale.z -0.1f);
-            ScoreManager.Instance.CurrentScore += 10;
+            ScoreManager.Instance.CurrentScore += 1;
         }
          if(collision.gameObject.tag == "City")
          {

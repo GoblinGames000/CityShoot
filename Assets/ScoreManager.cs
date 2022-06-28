@@ -17,6 +17,14 @@ public class ScoreManager : MonoBehaviour
       Instance = this;
    }
 
+   private void OnEnable()
+   {
+      if (Session.Instance._GameType == GameType.Endless)
+      {
+         Bar.transform.parent.gameObject.SetActive(false);
+      }
+   }
+
    public int CurrentScore
    {
       get
@@ -26,17 +34,33 @@ public class ScoreManager : MonoBehaviour
       set
       {
          _CurrentScore = value;
-         Bar.fillAmount = _CurrentScore /
-                          Session.Instance.LevelStatus._LevelDatas[Session.Instance.CurrentLevel].ScoreToAchieve;
-         if (_CurrentScore >= Session.Instance.LevelStatus._LevelDatas[Session.Instance.CurrentLevel].TopScore)
+         if (Session.Instance._GameType == GameType.Mission)
          {
-            Session.Instance.LevelStatus._LevelDatas[Session.Instance.CurrentLevel].TopScore = _CurrentScore;
-         } 
-         if (_CurrentScore >= Session.Instance.LevelStatus._LevelDatas[Session.Instance.CurrentLevel].ScoreToAchieve)
-         {
-            CanvasManager.Instance._GameState = GameState.Win;
+            Bar.fillAmount = (float) _CurrentScore /
+                             (float) Session.Instance.LevelStatus._LevelDatas[Session.Instance.CurrentLevel]
+                                .ScoreToAchieve;
+            if (_CurrentScore >= Session.Instance.LevelStatus._LevelDatas[Session.Instance.CurrentLevel].TopScore)
+            {
+               Session.Instance.LevelStatus._LevelDatas[Session.Instance.CurrentLevel].TopScore = _CurrentScore;
+            }
+
+            if (_CurrentScore >= Session.Instance.LevelStatus._LevelDatas[Session.Instance.CurrentLevel].ScoreToAchieve)
+            {
+               Session.Instance.LevelStatus._LevelDatas[Session.Instance.CurrentLevel + 1].Unlocked = true;
+               CanvasManager.Instance._GameState = GameState.Win;
+            }
          }
+         else
+         {
+            if (_CurrentScore >= Session.Instance.EndlessScore)
+            {
+               Session.Instance.EndlessScore = _CurrentScore;
+            }
+         }
+
          ScoreText.text = _CurrentScore.ToString();
+         
+         
       }
    }
 }
